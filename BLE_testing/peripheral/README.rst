@@ -1,25 +1,33 @@
-.. _ble_peripheral:
+.. _hello_world:
 
-Bluetooth: Peripheral
-#####################
+Hello World
+###########
 
 Overview
 ********
 
-Application demonstrating the BLE Peripheral role. It has several well-known and
-vendor-specific GATT services that it exposes.
-
-
-Requirements
-************
-
-* BlueZ running on the host, or
-* A board with BLE support
+A simple sample that can be used with any :ref:`supported board <boards>` and
+prints "Hello World" to the console.
 
 Building and Running
 ********************
 
-This sample can be found under :zephyr_file:`samples/bluetooth/peripheral` in the
-Zephyr tree.
+This application can be built and executed on QEMU as follows:
 
-See :ref:`bluetooth samples section <bluetooth-samples>` for details.
+.. zephyr-app-commands::
+   :zephyr-app: samples/hello_world
+   :host-os: unix
+   :board: qemu_x86
+   :goals: run
+   :compact:
+
+To build for another board, change "qemu_x86" above to that board's name.
+
+Sample Output
+=============
+
+.. code-block:: console
+
+    Hello World! x86
+
+Exit QEMU by pressing :kbd:`CTRL+A` :kbd:`x`.
