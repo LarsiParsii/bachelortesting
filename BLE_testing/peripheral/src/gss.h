@@ -1,18 +1,5 @@
-/*
- * Copyright (c) 2018 Nordic Semiconductor ASA
- *
- * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
- */
-
 #ifndef BT_LBS_H_
 #define BT_LBS_H_
-
-/**@file
- * @defgroup bt_lbs LED Button Service API
- * @{
- * @brief API for the LED Button Service (LBS).
- */
-
 #ifdef __cplusplus
 extern "C"
 {
