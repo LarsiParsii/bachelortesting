@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ */
+
 #ifndef BT_LBS_H_
 #define BT_LBS_H_
 
@@ -25,7 +31,7 @@ extern "C" {
 /** @brief LED Characteristic UUID. */
 #define BT_UUID_LBS_LED_VAL \
 	BT_UUID_128_ENCODE(0x00001525, 0x1212, 0xefde, 0x1523, 0x785feabcd123)
-	
+
 
 #define BT_UUID_LBS           BT_UUID_DECLARE_128(BT_UUID_LBS_VAL)
 #define BT_UUID_LBS_BUTTON    BT_UUID_DECLARE_128(BT_UUID_LBS_BUTTON_VAL)
