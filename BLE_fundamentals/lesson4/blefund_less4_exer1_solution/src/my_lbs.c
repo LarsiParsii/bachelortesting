@@ -1,13 +1,3 @@
-/*
- * Copyright (c) 2018 Nordic Semiconductor ASA
- *
- * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
- */
-
-/** @file
- *  @brief LED Button Service (LBS) sample
- */
-
 #include <zephyr/types.h>
 #include <stddef.h>
 #include <string.h>
