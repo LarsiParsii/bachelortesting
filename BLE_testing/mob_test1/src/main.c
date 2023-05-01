@@ -18,9 +18,9 @@
 #include "gss.h"
 
 static struct bt_le_adv_param *adv_param = BT_LE_ADV_PARAM((BT_LE_ADV_OPT_CONNECTABLE|BT_LE_ADV_OPT_USE_IDENTITY), /* Connectable advertising and use identity address */
-                800, /*Min Advertising Interval 500ms (800*0.625ms) */
-                801, /*Max Advertising Interval 500.625ms (801*0.625ms)*/
-                NULL); /* Set to NULL for undirected advertising*/
+				800, /*Min Advertising Interval 500ms (800*0.625ms) */
+				801, /*Max Advertising Interval 500.625ms (801*0.625ms)*/
+				NULL); /* Set to NULL for undirected advertising*/
 
 
 LOG_MODULE_REGISTER(Lesson4_Exercise1, LOG_LEVEL_INF);
@@ -65,8 +65,8 @@ static bool app_button_cb(void)
 
 /* STEP 10 - Declare a varaible app_callbacks of type my_lbs_cb and initiate its members to the applications call back functions we developed in steps 8.2 and 9.2 .*/
 static struct gss_cb_s app_callbacks = {
-	.led_cb    = app_led_cb,
-	.button_cb = app_button_cb,
+	.gps_cb	= app_led_cb,
+	.hum_cb	= app_button_cb,
 };
 
 static void button_changed(uint32_t button_state, uint32_t has_changed)
@@ -96,8 +96,8 @@ static void on_disconnected(struct bt_conn *conn, uint8_t reason)
 }
 
 struct bt_conn_cb connection_callbacks = {
-    .connected              = on_connected,
-    .disconnected           = on_disconnected,  
+	.connected              = on_connected,
+	.disconnected           = on_disconnected,  
 };
 
 static int init_button(void)
@@ -117,7 +117,7 @@ void main(void)
 	int blink_status = 0;
 	int err;
 
-	LOG_INF("Starting Lesson 4 - Exercise 1 \n");
+	LOG_INF("Starting MOB unit application \n");
 
 	err = dk_leds_init();
 	if (err) {
@@ -136,17 +136,17 @@ void main(void)
 		LOG_ERR("Bluetooth init failed (err %d)\n", err);
 		return;
 	}
-    bt_conn_cb_register(&connection_callbacks);
+	bt_conn_cb_register(&connection_callbacks);
 
 	/* STEP 11 - Pass your application callback functions stored in app_callbacks to the MY LBS service */
-	err = my_lbs_init(&app_callbacks);
+	err = gss_init(&app_callbacks);
 	if (err) {
 		printk("Failed to init LBS (err:%d)\n", err);
 		return;
 	}
 	LOG_INF("Bluetooth initialized\n");
 	err = bt_le_adv_start(adv_param, ad, ARRAY_SIZE(ad),
-			      sd, ARRAY_SIZE(sd));
+				  sd, ARRAY_SIZE(sd));
 	if (err) {
 		LOG_ERR("Advertising failed to start (err %d)\n", err);
 		return;
