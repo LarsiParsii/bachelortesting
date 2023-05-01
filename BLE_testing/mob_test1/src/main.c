@@ -48,7 +48,7 @@ static const struct bt_data ad[] = {
 };
 
 static const struct bt_data sd[] = {
-	BT_DATA_BYTES(BT_DATA_UUID128_ALL, BT_UUID_LBS_VAL),
+	BT_DATA_BYTES(BT_DATA_UUID128_ALL, BT_UUID_GSS_VAL),
 };
 
 /* STEP 8.2 - Define the application callback function for controlling the LED*/
@@ -64,7 +64,7 @@ static bool app_button_cb(void)
 }
 
 /* STEP 10 - Declare a varaible app_callbacks of type my_lbs_cb and initiate its members to the applications call back functions we developed in steps 8.2 and 9.2 .*/
-static struct my_lbs_cb app_callbacks = {
+static struct gss_cb_s app_callbacks = {
 	.led_cb    = app_led_cb,
 	.button_cb = app_button_cb,
 };
