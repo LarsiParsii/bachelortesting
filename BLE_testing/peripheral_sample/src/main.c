@@ -174,7 +174,7 @@ static ssize_t write_without_rsp_vnd(struct bt_conn *conn,
 		 */
 		return BT_GATT_ERR(BT_ATT_ERR_WRITE_REQ_REJECTED);
 	}
-
+	
 	if (offset + len > VND_MAX_LEN) {
 		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
 	}
