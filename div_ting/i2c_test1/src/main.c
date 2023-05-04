@@ -6,9 +6,9 @@
 #include "icm20948.h"
 
 /* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS 1000
+#define SLEEP_TIME_MS 200
 /* 3000 msec = 3 sec */
-#define PAUSE_TIME_MS 1500
+#define PAUSE_TIME_MS 250
 
 void main(void)
 {
@@ -22,8 +22,13 @@ void main(void)
 	}
 	
 	int ret;
-	int reg_value;
-	
+	uint8_t reg_value;
+
+	/* Read and print who_am_i register (should always print 234 (0xEA)) */
+	printk("Reading who_am_i register...\n");
+	reg_value = read_reg(&dev_i2c, 0, REG_WHO_AM_I);
+	printk("Register value: %hhu\n", reg_value);
+
 	// Select Bank 0
 	ret = select_bank(&dev_i2c, 0);
 	if (ret != 0)
@@ -41,7 +46,7 @@ void main(void)
 		printk("Failed to write to I2C device address %x at Reg. %x: %s\n", dev_i2c.addr, config_pwr_mgmt_1[0], strerror(-ret));
 		return;
 	}
-	reg_value = read_reg_binary(&dev_i2c, 0, REG_PWR_MGMT_1);
+	reg_value = read_reg(&dev_i2c, 0, REG_PWR_MGMT_1);
 	printk("Register value: %d\n", reg_value);
 	k_msleep(PAUSE_TIME_MS);
 
@@ -54,7 +59,7 @@ void main(void)
 		printk("Failed to write to I2C device address %x at Reg. %x: %s\n", dev_i2c.addr, config_pwr_mgmt_2[0], strerror(-ret));
 		return;
 	}
-	reg_value = read_reg_binary(&dev_i2c, 0, REG_PWR_MGMT_2);
+	reg_value = read_reg(&dev_i2c, 0, REG_PWR_MGMT_2);
 	printk("Register value: %d\n", reg_value);
 	k_msleep(PAUSE_TIME_MS);
 
@@ -68,17 +73,17 @@ void main(void)
 
 	// Set the desired gyro full-scale range (e.g., ±1000 dps)
 	printk("Setting the desired gyro full-scale range (±1000 dps)...\n");
-	uint8_t gyro_config[2] = {REG_GYRO_CONFIG_1, GYRO_FS_SEL_1000DPS};
+	uint8_t gyro_config[2] = {REG_GYRO_CONFIG_1, GYRO_FS_SEL_2000DPS};
 	ret = i2c_write_dt(&dev_i2c, gyro_config, sizeof(gyro_config));
 	if (ret != 0)
 	{
 		printk("Failed to write to I2C device address %x at Reg. %x: %s\n", dev_i2c.addr, gyro_config[0], strerror(-ret));
 		return;
 	}
-	reg_value = read_reg_binary(&dev_i2c, 2, REG_GYRO_CONFIG_1);
+	reg_value = read_reg(&dev_i2c, 2, REG_GYRO_CONFIG_1);
 	printk("Register value: %d\n", reg_value);
 	k_msleep(PAUSE_TIME_MS);
-
+	
 	while (1)
 	{
 		// Select Bank 0 to read gyroscope data
@@ -104,9 +109,14 @@ void main(void)
 		int16_t gyro_xout = (gyro_data[0] << 8) | gyro_data[1];
 		int16_t gyro_yout = (gyro_data[2] << 8) | gyro_data[3];
 		int16_t gyro_zout = (gyro_data[4] << 8) | gyro_data[5];
+		
+		/* Print raw data */
+		printk("\nGyro X-axis raw data: %d\n", gyro_xout);
+		printk("Gyro Y-axis raw data: %d\n", gyro_yout);
+		printk("Gyro Z-axis raw data: %d\n\n", gyro_zout);
 
 		// Calculate the angular rate for the X-axis
-		float gyro_sensitivity = 32.8;
+		float gyro_sensitivity = 16.4;
 		float x_angular_rate = (float)gyro_xout / gyro_sensitivity;
 		float y_angular_rate = (float)gyro_yout / gyro_sensitivity;
 		float z_angular_rate = (float)gyro_zout / gyro_sensitivity;
@@ -114,9 +124,6 @@ void main(void)
 		printk("Gyro X-axis angular rate: %f\n", x_angular_rate);
 		printk("Gyro Y-axis angular rate: %f\n", y_angular_rate);
 		printk("Gyro Z-axis angular rate: %f\n\n", z_angular_rate);
-
-		reg_value = read_reg_binary(&dev_i2c, 0, REG_GYRO_XOUT_L);
-		printk("Register value: %d\n", reg_value);
 		k_msleep(SLEEP_TIME_MS);
 	}
 }
