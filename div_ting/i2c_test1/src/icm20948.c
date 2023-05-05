@@ -26,6 +26,11 @@ int select_bank(const struct i2c_dt_spec *dev_i2c, uint8_t bank)
 	
 	uint8_t config_bank_sel[] = {REG_BANK_SEL, bank_value};
 	int ret = i2c_write_dt(dev_i2c, config_bank_sel, sizeof(config_bank_sel));
+		if (ret != 0)
+		{
+			printk("Failed to select bank %d: %s\n", bank, strerror(-ret));
+			return;
+		}
 	
 	return ret;
 }

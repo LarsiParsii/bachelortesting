@@ -3,6 +3,8 @@
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/sys/printk.h>
+#include <errno.h>
+#include <string.h>
 #include "icm20948.h"
 
 /* 1000 msec = 1 sec */
@@ -33,7 +35,7 @@ void main(void)
 	ret = select_bank(&dev_i2c, 0);
 	if (ret != 0)
 	{
-		printk("Failed to select bank 0: %s\n", strerror(-ret));
+		printk("Failed to select bank 0: #%d %s\n", ret, strerror(-ret));
 		return;
 	}
 
@@ -73,7 +75,7 @@ void main(void)
 
 	// Set the desired gyro full-scale range (e.g., ±1000 dps)
 	printk("Setting the desired gyro full-scale range (±1000 dps)...\n");
-	uint8_t gyro_config[2] = {REG_GYRO_CONFIG_1, GYRO_FS_SEL_2000DPS};
+	uint8_t gyro_config[2] = {REG_GYRO_CONFIG_1, GYRO_FS_SEL_1000DPS};
 	ret = i2c_write_dt(&dev_i2c, gyro_config, sizeof(gyro_config));
 	if (ret != 0)
 	{
@@ -88,11 +90,6 @@ void main(void)
 	{
 		// Select Bank 0 to read gyroscope data
 		ret = select_bank(&dev_i2c, 0);
-		if (ret != 0)
-		{
-			printk("Failed to select bank 0: %s\n", strerror(-ret));
-			return;
-		}
 
 		uint8_t gyro_data[6];
 
