@@ -97,7 +97,7 @@ static ssize_t read_button(struct bt_conn *conn,
 }
 
 /* LED Button Service Declaration */
-/* STEP 2 - Create and add the MY LBS service to the Bluetooth LE stack */
+/* Creates and adds the GSS service to the Bluetooth LE stack */
 BT_GATT_SERVICE_DEFINE(gss_svc,
 					   BT_GATT_PRIMARY_SERVICE(BT_UUID_GSS),
 					   /* STEP 3 - Create and add the Button characteristic */
