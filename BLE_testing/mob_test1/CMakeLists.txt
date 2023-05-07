@@ -8,4 +8,7 @@ project(NONE)
 target_sources(app PRIVATE
     src/main.c
     src/gss.c
+	src/dis.c
+	src/gps.c
+	src/hum.c
 )

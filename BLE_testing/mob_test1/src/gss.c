@@ -31,7 +31,39 @@ LOG_MODULE_DECLARE(Lesson4_Exercise1);
 static bool button_state;
 static struct gss_cb_s gss_cb;
 
-/* STEP 6 - Implement the write callback function of the LED characteristic */
+/* GPS Sensor Service Declaration */
+/* Creates and adds the GSS service to the Bluetooth LE stack */
+BT_GATT_SERVICE_DEFINE(gss_svc,
+					   BT_GATT_PRIMARY_SERVICE(BT_UUID_GSS),
+					   /* STEP 3 - Create and add the Button characteristic */
+					   BT_GATT_CHARACTERISTIC(BT_UUID_GSS_GPS,
+											  BT_GATT_CHRC_READ,
+											  BT_GATT_PERM_READ, NULL, NULL,
+											  &button_state),
+					   /* STEP 4 - Create and add the LED characteristic. */
+					   BT_GATT_CHARACTERISTIC(BT_UUID_GSS_HUM,
+											  BT_GATT_CHRC_WRITE,
+											  BT_GATT_PERM_WRITE,
+											  NULL, write_led, NULL),
+
+);
+
+
+/* CALLBACKS */
+
+/* A function to register application callbacks */
+int gss_init(struct gss_cb_s *callbacks)
+{
+	if (callbacks)
+	{
+		gss_cb.led_cb = callbacks->led_cb;
+		gss_cb.button_cb = callbacks->button_cb;
+	}
+
+	return 0;
+}
+
+/* Write callback */
 static ssize_t write_led(struct bt_conn *conn,
 						 const struct bt_gatt_attr *attr,
 						 const void *buf,
@@ -72,54 +104,25 @@ static ssize_t write_led(struct bt_conn *conn,
 	return len;
 }
 
-/* STEP 5 - Implement the read callback function of the Button characteristic*/
-static ssize_t read_button(struct bt_conn *conn,
-						   const struct bt_gatt_attr *attr,
-						   void *buf,
-						   uint16_t len,
-						   uint16_t offset)
+
+/* BLUETOOTH CONNECTION CALLBACKS */
+
+void on_connected(struct bt_conn *conn, uint8_t err)
 {
-	// get a pointer to button_state which is passed in the BT_GATT_CHARACTERISTIC() and stored in attr->user_data
-	const char *value = attr->user_data;
-
-	LOG_DBG("Attribute read, handle: %u, conn: %p", attr->handle,
-			(void *)conn);
-
-	if (gss_cb.button_cb)
+	if (err)
 	{
-		// Call the application callback function to update the get the current value of the button
-		button_state = gss_cb.button_cb();
-		return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
-								 sizeof(*value));
+		printk("Connection failed (err %u)\n", err);
+		return;
 	}
 
-	return 0;
+	printk("Connected\n");
+
+	dk_set_led_on(CON_STATUS_LED);
 }
 
-/* LED Button Service Declaration */
-/* Creates and adds the GSS service to the Bluetooth LE stack */
-BT_GATT_SERVICE_DEFINE(gss_svc,
-					   BT_GATT_PRIMARY_SERVICE(BT_UUID_GSS),
-					   /* STEP 3 - Create and add the Button characteristic */
-					   BT_GATT_CHARACTERISTIC(BT_UUID_GSS_GPS,
-											  BT_GATT_CHRC_READ,
-											  BT_GATT_PERM_READ, read_button, NULL,
-											  &button_state),
-					   /* STEP 4 - Create and add the LED characteristic. */
-					   BT_GATT_CHARACTERISTIC(BT_UUID_GSS_HUM,
-											  BT_GATT_CHRC_WRITE,
-											  BT_GATT_PERM_WRITE,
-											  NULL, write_led, NULL),
-
-);
-/* A function to register application callbacks for the LED and Button characteristics  */
-int gss_init(struct gss_cb_s *callbacks)
+void on_disconnected(struct bt_conn *conn, uint8_t reason)
 {
-	if (callbacks)
-	{
-		gss_cb.led_cb = callbacks->led_cb;
-		gss_cb.button_cb = callbacks->button_cb;
-	}
+	printk("Disconnected (reason %u)\n", reason);
 
-	return 0;
+	dk_set_led_off(CON_STATUS_LED);
 }
