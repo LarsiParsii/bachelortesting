@@ -12,6 +12,7 @@
 #include "gss.h"
 #include "gps.h"
 #include "hum.h"
+#include "ble.h"
 
 LOG_MODULE_REGISTER(mob_test1, LOG_LEVEL_INF);
 
@@ -73,27 +74,14 @@ void main(void)
 		return;
 	}
 
-	err = bt_enable(NULL);
-	if (err) {
-		LOG_ERR("Bluetooth init failed (err %d)\n", err);
-		return;
-	}
-	bt_conn_cb_register(&connection_callbacks);
-
 	err = gss_init(&app_callbacks);
-	if (err) {
+	if (err)
+	{
 		LOG_ERR("Failed to init GSS (err:%d)\n", err);
 		return;
 	}
-	LOG_INF("Bluetooth initialized\n");
-	err = bt_le_adv_start(adv_param, ad, ARRAY_SIZE(ad),
-				  sd, ARRAY_SIZE(sd));
-	if (err) {
-		LOG_ERR("Advertising failed to start (err %d)\n", err);
-		return;
-	}
-
-	LOG_INF("Advertising successfully started\n");
+	
+	ble_init(&connection_callbacks);
 
 	for (;;) {
 		dk_set_led(RUN_STATUS_LED, (++blink_status) % 2);
