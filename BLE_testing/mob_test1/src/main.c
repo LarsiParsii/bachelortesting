@@ -7,17 +7,16 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
-
 #include <dk_buttons_and_leds.h>
+
 #include "gss.h"
 #include "gps.h"
 #include "hum.h"
 #include "ble.h"
 
-LOG_MODULE_REGISTER(mob_test1, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(main_c, LOG_LEVEL_DBG);
 
 #define RUN_LED_BLINK_INTERVAL  1000
-
 static bool app_button_state;
 
 /* STEP 8.2 - Define the application callback function for controlling the LED*/
@@ -57,6 +56,12 @@ static int init_button(void)
 
 void main(void)
 {
+	LOG_DBG("Starting application (debug level)\n");
+	LOG_INF("Starting application (info level)\n");
+	LOG_WRN("Starting application (warning level)\n");
+	LOG_ERR("Starting application (error level)\n");
+	LOG_DBG("Starting application (debug level)\n");
+
 	int blink_status = 0;
 	int err;
 

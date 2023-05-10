@@ -26,7 +26,7 @@
 
 #include <zephyr/logging/log.h>
 
-LOG_MODULE_DECLARE(Lesson4_Exercise1);
+LOG_MODULE_REGISTER(gss, LOG_LEVEL_DBG);
 
 static bool button_state;
 static struct gss_cb_s gss_cb;
@@ -39,7 +39,7 @@ BT_GATT_SERVICE_DEFINE(gss_svc,
 					   BT_GATT_CHARACTERISTIC(BT_UUID_GSS_GPS,
 											  BT_GATT_CHRC_READ,
 											  BT_GATT_PERM_READ, NULL, NULL,
-											  &button_state),
+											  NULL),
 					   /* STEP 4 - Create and add the LED characteristic. */
 					   BT_GATT_CHARACTERISTIC(BT_UUID_GSS_HUM,
 											  BT_GATT_CHRC_WRITE,
@@ -102,27 +102,4 @@ static ssize_t write_led(struct bt_conn *conn,
 	}
 
 	return len;
-}
-
-
-/* BLUETOOTH CONNECTION CALLBACKS */
-
-void on_connected(struct bt_conn *conn, uint8_t err)
-{
-	if (err)
-	{
-		printk("Connection failed (err %u)\n", err);
-		return;
-	}
-
-	printk("Connected\n");
-
-	dk_set_led_on(CON_STATUS_LED);
-}
-
-void on_disconnected(struct bt_conn *conn, uint8_t reason)
-{
-	printk("Disconnected (reason %u)\n", reason);
-
-	dk_set_led_off(CON_STATUS_LED);
 }

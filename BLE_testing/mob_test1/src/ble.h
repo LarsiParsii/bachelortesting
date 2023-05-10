@@ -1,16 +1,16 @@
 #ifndef ble_H
 #define ble_H
 
-// Includes
+/* Includes */
 #include <zephyr/bluetooth/conn.h>
 
-// Defines
-#define DEVICE_NAME CONFIG_BT_DEVICE_NAME
-#define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
-#define MODEL CONFIG_BT_DIS_MODEL
-#define MODEL_LEN (sizeof(MODEL) - 1)
+/* Defines */
 
-// Prototypes
+/* Function prototypes */
 int ble_init(struct bt_conn_cb *bt_connection_cb);
+
+/* Bluetooth connection callbacks */
+void on_connected(struct bt_conn *conn, uint8_t err);
+void on_disconnected(struct bt_conn *conn, uint8_t reason);
 
 #endif  // ble_H

@@ -95,10 +95,6 @@ static ssize_t write_led(struct bt_conn *conn,
 						 const void *buf,
 						 uint16_t len, uint16_t offset, uint8_t flags);
 
-/* Bluetooth connection callbacks */
-void on_connected(struct bt_conn *conn, uint8_t err);
-void on_disconnected(struct bt_conn *conn, uint8_t reason);
-
 
 
 #ifdef __cplusplus
