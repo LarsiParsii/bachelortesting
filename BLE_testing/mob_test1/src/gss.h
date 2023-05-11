@@ -24,12 +24,10 @@ extern "C"
 
 #define RUN_STATUS_LED          DK_LED1
 #define CON_STATUS_LED          DK_LED2
-
 /* LED to control */
-#define USER_LED                DK_LED3
+#define USER_LED DK_LED3
 /* Button to monitor */
-#define USER_BUTTON             DK_BTN1_MSK
-
+#define USER_BUTTON DK_BTN1_MSK
 
 /* CUSTOM SERVICE UUIDs */
 
@@ -42,12 +40,12 @@ extern "C"
 	BT_UUID_128_ENCODE(0x6dea7371, 0x0bdf, 0x43db, 0x8ea8, 0x1c3a6a7e5909)
 
 /** @brief Humidity Sensor Characteristic UUID. */
-#define BT_UUID_GSS_HUM_VAL \
+#define BT_UUID_GSS_MOB_VAL \
 	BT_UUID_128_ENCODE(0x6dea7372, 0x0bdf, 0x43db, 0x8ea8, 0x1c3a6a7e5909)
 
 #define BT_UUID_GSS           BT_UUID_DECLARE_128(BT_UUID_GSS_VAL)
 #define BT_UUID_GSS_GPS       BT_UUID_DECLARE_128(BT_UUID_GSS_GPS_VAL)
-#define BT_UUID_GSS_HUM       BT_UUID_DECLARE_128(BT_UUID_GSS_HUM_VAL)
+#define BT_UUID_GSS_MOB       BT_UUID_DECLARE_128(BT_UUID_GSS_MOB_VAL)
 
 
 /* CALLBACK STRUCTURE */
@@ -56,7 +54,7 @@ extern "C"
 typedef int (*gps_cb_t)(void);
 
 /** @brief Callback type for humidity sensor reading */
-typedef int (*hum_cb_t)(void);
+typedef int (*mob_cb_t)(void);
 
 /** @brief Callback type for when an LED state change is received. */
 typedef void (*led_cb_t)(const bool led_state);
@@ -70,7 +68,7 @@ struct gss_cb_s
 	/** GPS reading callback. */
 	gps_cb_t gps_cb;
 	/** Humidity change callback. */
-	hum_cb_t hum_cb;
+	mob_cb_t mob_cb;
 	/** LED state change callback. */
 	led_cb_t led_cb;
 	/** Button read callback. */

@@ -16,12 +16,17 @@
 
 LOG_MODULE_REGISTER(main_c, LOG_LEVEL_DBG);
 
-#define RUN_LED_BLINK_INTERVAL  1000
+#define RUN_LED_BLINK_INTERVAL 1000
+/* LED to control */
+#define USER_LED DK_LED3
+/* Button to monitor */
+#define USER_BUTTON DK_BTN1_MSK
+
 static bool app_button_state;
 
-/* STEP 8.2 - Define the application callback function for controlling the LED*/
 static void app_led_cb(bool led_state)
 {
+	printk("LED state changed to %d\n", led_state);
 	dk_set_led(USER_LED, led_state);
 }
 
@@ -29,9 +34,12 @@ struct bt_conn_cb connection_callbacks = {
 	.connected = on_connected,
 	.disconnected = on_disconnected,
 };
+
 static struct gss_cb_s app_callbacks = {
-	.gps_cb	= app_led_cb,
-	.hum_cb	= NULL,
+	.gps_cb		= NULL,
+	.mob_cb 	= NULL,
+	.button_cb	= NULL,
+	.led_cb		= app_led_cb,
 };
 
 static void button_changed(uint32_t button_state, uint32_t has_changed)

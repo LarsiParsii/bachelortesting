@@ -28,7 +28,6 @@
 
 LOG_MODULE_REGISTER(gss, LOG_LEVEL_DBG);
 
-static bool button_state;
 static struct gss_cb_s gss_cb;
 
 /* GPS Sensor Service Declaration */
@@ -41,13 +40,12 @@ BT_GATT_SERVICE_DEFINE(gss_svc,
 											  BT_GATT_PERM_READ, NULL, NULL,
 											  NULL),
 					   /* STEP 4 - Create and add the LED characteristic. */
-					   BT_GATT_CHARACTERISTIC(BT_UUID_GSS_HUM,
+					   BT_GATT_CHARACTERISTIC(BT_UUID_GSS_MOB,
 											  BT_GATT_CHRC_WRITE,
 											  BT_GATT_PERM_WRITE,
 											  NULL, write_led, NULL),
 
 );
-
 
 /* CALLBACKS */
 
@@ -56,8 +54,10 @@ int gss_init(struct gss_cb_s *callbacks)
 {
 	if (callbacks)
 	{
-		gss_cb.led_cb = callbacks->led_cb;
+		gss_cb.gps_cb = callbacks->gps_cb;
+		gss_cb.mob_cb = callbacks->mob_cb;
 		gss_cb.button_cb = callbacks->button_cb;
+		gss_cb.led_cb = callbacks->led_cb;
 	}
 
 	return 0;
@@ -84,15 +84,20 @@ static ssize_t write_led(struct bt_conn *conn,
 		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
 	}
 
+	LOG_DBG("Checking if led_cb is set");
 	if (gss_cb.led_cb)
 	{
 		// Read the received value
 		uint8_t val = *((uint8_t *)buf);
+		LOG_DBG("Received value: %d", val);
 
 		if (val == 0x00 || val == 0x01)
 		{
+			LOG_DBG("Writing value %d to LED characteristic", val);
 			// Call the application callback function to update the LED state
-			gss_cb.led_cb(val ? true : false);
+			bool led_state = val ? true : false;
+			gss_cb.led_cb(led_state);
+			LOG_DBG("LED state updated");
 		}
 		else
 		{
