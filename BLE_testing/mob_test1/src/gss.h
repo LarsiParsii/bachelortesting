@@ -69,10 +69,6 @@ struct gss_cb_s
 	gps_cb_t gps_cb;
 	/** Humidity change callback. */
 	mob_cb_t mob_cb;
-	/** LED state change callback. */
-	led_cb_t led_cb;
-	/** Button read callback. */
-	button_cb_t button_cb;
 };
 
 

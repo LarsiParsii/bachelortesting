@@ -24,12 +24,6 @@ LOG_MODULE_REGISTER(main_c, LOG_LEVEL_DBG);
 
 static bool app_button_state;
 
-static void app_led_cb(bool led_state)
-{
-	printk("LED state changed to %d\n", led_state);
-	dk_set_led(USER_LED, led_state);
-}
-
 struct bt_conn_cb connection_callbacks = {
 	.connected = on_connected,
 	.disconnected = on_disconnected,
@@ -38,8 +32,6 @@ struct bt_conn_cb connection_callbacks = {
 static struct gss_cb_s app_callbacks = {
 	.gps_cb		= NULL,
 	.mob_cb 	= NULL,
-	.button_cb	= NULL,
-	.led_cb		= app_led_cb,
 };
 
 static void button_changed(uint32_t button_state, uint32_t has_changed)
@@ -64,11 +56,10 @@ static int init_button(void)
 
 void main(void)
 {
-	LOG_DBG("Starting application (debug level)\n");
-	LOG_INF("Starting application (info level)\n");
-	LOG_WRN("Starting application (warning level)\n");
-	LOG_ERR("Starting application (error level)\n");
-	LOG_DBG("Starting application (debug level)\n");
+	LOG_ERR("Error log level enabled\n");
+	LOG_WRN("Warning log level enabled\n");
+	LOG_INF("Info log level enabled\n");
+	LOG_DBG("Debug log level enabled\n\n");
 
 	int blink_status = 0;
 	int err;
