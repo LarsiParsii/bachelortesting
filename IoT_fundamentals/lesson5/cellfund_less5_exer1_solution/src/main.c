@@ -19,7 +19,7 @@
 #include <zephyr/net/coap.h>
 
 /* STEP 4.1 - Define the macro for the message from the board */
-#define MESSAGE_TO_SEND "Hello from nRF9160 SiP"
+#define MESSAGE_TO_SEND "Hello from MEEE SiP"
 
 /* STEP 4.2 - Define the macros for the CoAP version and message length */
 #define APP_COAP_VERSION 1
