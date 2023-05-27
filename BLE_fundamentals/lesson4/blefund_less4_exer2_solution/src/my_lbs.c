@@ -137,8 +137,8 @@ BT_GATT_PRIMARY_SERVICE(BT_UUID_LBS),
 
 	BT_GATT_CCC(mylbsbc_ccc_mysensor_cfg_changed,
 		    BT_GATT_PERM_READ | BT_GATT_PERM_WRITE),
- 
 );
+
 /* A function to register application callbacks for the LED and Button characteristics  */
 int my_lbs_init(struct my_lbs_cb *callbacks)
 {
